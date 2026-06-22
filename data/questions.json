@@ -2194,13 +2194,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": false
       },
@@ -2250,13 +2250,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": true
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": false
       },
@@ -2306,13 +2306,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": false
       },
@@ -2362,13 +2362,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": false
       },
@@ -2418,13 +2418,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": false
       },
@@ -2474,13 +2474,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": true
       },
@@ -2530,13 +2530,13 @@
       },
       {
         "label": "D",
-        "text": "N 2",
+        "text": "N²",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2N",
+        "text": "2^N",
         "isCode": false,
         "correct": false
       },
@@ -5668,19 +5668,19 @@
     "options": [
       {
         "label": "A",
-        "text": "46",
+        "text": "4⁶",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "26",
+        "text": "2⁶",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "64",
+        "text": "6⁴",
         "isCode": false,
         "correct": false
       },
@@ -5692,7 +5692,7 @@
       },
       {
         "label": "E",
-        "text": "210",
+        "text": "2¹⁰",
         "isCode": false,
         "correct": false
       }
@@ -6344,13 +6344,13 @@
       },
       {
         "label": "C",
-        "text": "25",
+        "text": "2⁵",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "24",
+        "text": "2⁴",
         "isCode": false,
         "correct": true
       },
@@ -6467,44 +6467,44 @@
     "content": [
       {
         "type": "text",
-        "value": "Care este expresia timpului de execuţie T (n) al următorului algoritm în cazul cel mai favorabil, în cazul mediu şi în cazul cel mai defavorabil, unde n notează dimensiunea setului de intrare, iar k, k1, . . . , k8 - orice constantă pozitivă: procedure algoritm(v, n) for i ← 2, n do key ← v[i] j ← i − 1 while (j > 0) and (v[j] > key) do v[j + 1] ← v[j] j ← j − 1 end while v[j] ← key end for end procedure"
+        "value": "Care este expresia timpului de execuţie T (n) al următorului algoritm în cazul cel mai favorabil, în cazul mediu şi în cazul cel mai defavorabil, unde n notează dimensiunea setului de intrare, iar k, k₁, . . . , k₈ - orice constantă pozitivă: procedure algoritm(v, n) for i ← 2, n do key ← v[i] j ← i − 1 while (j > 0) and (v[j] > key) do v[j + 1] ← v[j] j ← j − 1 end while v[j] ← key end for end procedure"
       }
     ],
-    "text": "Care este expresia timpului de execuţie T (n) al următorului algoritm în cazul cel mai favorabil, în cazul mediu şi în cazul cel mai defavorabil, unde n notează dimensiunea setului de intrare, iar k, k1, . . . , k8 - orice constantă pozitivă: procedure algoritm(v, n) for i ← 2, n do key ← v[i] j ← i − 1 while (j > 0) and (v[j] > key) do v[j + 1] ← v[j] j ← j − 1 end while v[j] ← key end for end procedure",
+    "text": "Care este expresia timpului de execuţie T (n) al următorului algoritm în cazul cel mai favorabil, în cazul mediu şi în cazul cel mai defavorabil, unde n notează dimensiunea setului de intrare, iar k, k₁, . . . , k₈ - orice constantă pozitivă: procedure algoritm(v, n) for i ← 2, n do key ← v[i] j ← i − 1 while (j > 0) and (v[j] > key) do v[j + 1] ← v[j] j ← j − 1 end while v[j] ← key end for end procedure",
     "options": [
       {
         "label": "A",
-        "text": "k, k1n, k2n + k3",
+        "text": "k, k₁n, k₂n + k₃",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "k1n + k2, k3n + k4, k5n + k6",
+        "text": "k₁n + k₂, k₃n + k₄, k₅n + k₆",
         "isCode": false,
         "correct": false
       },
       {
         "label": "C",
-        "text": "k, k n + k , k n2 + k n + k 1 2 2 3 4",
+        "text": "k, k₁n + k₂, k₂n² + k₃n + k₄",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "k n + k , k n + k , k n2 + k n + k 1 2 3 4 5 6 7",
+        "text": "k₁n + k₂, k₃n + k₄, k₅n² + k₆n + k₇",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "k, k n2 + k n + k , k n2 + k n + k 1 2 3 4 5 6",
+        "text": "k, k₁n² + k₂n + k₃, k₄n² + k₅n + k₆",
         "isCode": false,
         "correct": false
       },
       {
         "label": "F",
-        "text": "k n + k , k n2 + k n + k , k n2 + k n + k 1 2 3 4 5 6 7 8",
+        "text": "k₁n + k₂, k₃n² + k₄n + k₅, k₆n² + k₇n + k₈",
         "isCode": false,
         "correct": true
       }
@@ -6519,26 +6519,26 @@
     "content": [
       {
         "type": "text",
-        "value": "Determinaţi în care caz timpii de execuţie T1(n) şi T2(n) au acelaşi ordin de creştere, unde prin n notăm dimensiunea datelor de intrare iar k notează o constantă oarecare pozitivă:"
+        "value": "Determinaţi în care caz timpii de execuţie T₁(n) şi T₂(n) au acelaşi ordin de creştere, unde prin n notăm dimensiunea datelor de intrare iar k notează o constantă oarecare pozitivă:"
       }
     ],
-    "text": "Determinaţi în care caz timpii de execuţie T1(n) şi T2(n) au acelaşi ordin de creştere, unde prin n notăm dimensiunea datelor de intrare iar k notează o constantă oarecare pozitivă:",
+    "text": "Determinaţi în care caz timpii de execuţie T₁(n) şi T₂(n) au acelaşi ordin de creştere, unde prin n notăm dimensiunea datelor de intrare iar k notează o constantă oarecare pozitivă:",
     "options": [
       {
         "label": "A",
-        "text": "lim T1(n) = 0 n→∞ T (n) 2",
+        "text": "limn→∞ TT¹₂((nn)) = 0",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "lim T1(n) = ∞ n→∞ T 2(n)",
+        "text": "limn→∞ TT¹₂((nn)) = ∞",
         "isCode": false,
         "correct": false
       },
       {
         "label": "C",
-        "text": "lim T1(n) = k n→∞ T (n) 2",
+        "text": "limn→∞ TT¹₂((nn)) = k",
         "isCode": false,
         "correct": true
       }
@@ -6553,10 +6553,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Pentru lim f(n) = ∞, care din următoarele afirmaţii sunt adevărate? n→∞ g(n)"
+        "value": "Pentru limn→∞ᶠg(⁽ₙⁿ₎⁾ = ∞, care din următoarele afirmaţii sunt adevărate?"
       }
     ],
-    "text": "Pentru lim f(n) = ∞, care din următoarele afirmaţii sunt adevărate? n→∞ g(n)",
+    "text": "Pentru limn→∞ᶠg(⁽ₙⁿ₎⁾ = ∞, care din următoarele afirmaţii sunt adevărate?",
     "options": [
       {
         "label": "A",
@@ -6594,19 +6594,19 @@
     "options": [
       {
         "label": "A",
-        "text": "f(n)g(n) ∈ Ω(n2)",
+        "text": "f(n)g(n) ∈ Ω(n²)",
         "isCode": false,
         "correct": true
       },
       {
         "label": "B",
-        "text": "f(n)g(n) ∈ Θ(n2)",
+        "text": "f(n)g(n) ∈ Θ(n²)",
         "isCode": false,
         "correct": false
       },
       {
         "label": "C",
-        "text": "f(n)g(n) ∈ O(n2)",
+        "text": "f(n)g(n) ∈ O(n²)",
         "isCode": false,
         "correct": false
       }
@@ -6621,26 +6621,26 @@
     "content": [
       {
         "type": "text",
-        "value": "Pentru f(n) = 6n3 + 14n2 − 8n + 4 şi g(n) = 2n3 care din următoarele afirmaţii sunt adevărate?"
+        "value": "Pentru f(n) = 6n³ + 14n² − 8n + 4 şi g(n) = 2n³ care din următoarele afirmaţii sunt adevărate?"
       }
     ],
-    "text": "Pentru f(n) = 6n3 + 14n2 − 8n + 4 şi g(n) = 2n3 care din următoarele afirmaţii sunt adevărate?",
+    "text": "Pentru f(n) = 6n³ + 14n² − 8n + 4 şi g(n) = 2n³ care din următoarele afirmaţii sunt adevărate?",
     "options": [
       {
         "label": "A",
-        "text": "f(n), g(n) ∈ O(2n3)",
+        "text": "f(n), g(n) ∈ O(2n³)",
         "isCode": false,
         "correct": true
       },
       {
         "label": "B",
-        "text": "f(n), g(n) ∈ O(n3)",
+        "text": "f(n), g(n) ∈ O(n³)",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "f(n) ∈ O(6n3) şi g(n) ∈ O(2n3)",
+        "text": "f(n) ∈ O(6n³) şi g(n) ∈ O(2n³)",
         "isCode": false,
         "correct": true
       }
@@ -6655,26 +6655,26 @@
     "content": [
       {
         "type": "text",
-        "value": "Pentru f(n) ∈ Ω(n) şi g(n) ∈ O(n2) atunci"
+        "value": "Pentru f(n) ∈ Ω(n) şi g(n) ∈ O(n²) atunci"
       }
     ],
-    "text": "Pentru f(n) ∈ Ω(n) şi g(n) ∈ O(n2) atunci",
+    "text": "Pentru f(n) ∈ Ω(n) şi g(n) ∈ O(n²) atunci",
     "options": [
       {
         "label": "A",
-        "text": "f(n) ∈ Ω(n) g(n)",
+        "text": "fg((nn)) ∈ Ω(n)",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "f(n) ∈ O(n) g(n)",
+        "text": "fg((nn)) ∈ O(n)",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "f(n) ∈ Θ(n) g(n)",
+        "text": "fg((nn)) ∈ Θ(n)",
         "isCode": false,
         "correct": false
       }
@@ -6736,13 +6736,13 @@
       },
       {
         "label": "B",
-        "text": "f(n) ∈ O(n2)",
+        "text": "f(n) ∈ O(n²)",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "f(n) ∈ Θ(n2)",
+        "text": "f(n) ∈ Θ(n²)",
         "isCode": false,
         "correct": true
       }
@@ -6791,10 +6791,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Care este ordinul de complexitate al algoritmului de ridicare la putere al unui număr xn?"
+        "value": "Care este ordinul de complexitate al algoritmului de ridicare la putere al unui număr xⁿ?"
       }
     ],
-    "text": "Care este ordinul de complexitate al algoritmului de ridicare la putere al unui număr xn?",
+    "text": "Care este ordinul de complexitate al algoritmului de ridicare la putere al unui număr xⁿ?",
     "options": [
       {
         "label": "A",
@@ -6810,7 +6810,7 @@
       },
       {
         "label": "C",
-        "text": "Θ(xn) √",
+        "text": "Θ(xⁿ) √",
         "isCode": false,
         "correct": false
       }
@@ -6844,7 +6844,7 @@
       },
       {
         "label": "C",
-        "text": "f(n) ∈ O(n 1 ) 2",
+        "text": "f(n) ∈ O(n¹² )",
         "isCode": false,
         "correct": false
       }
@@ -6870,13 +6870,13 @@
     "options": [
       {
         "label": "A",
-        "text": "f(n) ∈ O(n2)",
+        "text": "f(n) ∈ O(n²)",
         "isCode": false,
         "correct": true
       },
       {
         "label": "B",
-        "text": "f(n) ∈ Θ(n2)",
+        "text": "f(n) ∈ Θ(n²)",
         "isCode": false,
         "correct": true
       },
@@ -6908,7 +6908,7 @@
     "options": [
       {
         "label": "A",
-        "text": "f(n) ∈ O(log2n)",
+        "text": "f(n) ∈ O(log₂n)",
         "isCode": false,
         "correct": true
       },
@@ -6952,7 +6952,7 @@
       },
       {
         "label": "B",
-        "text": "f(n) ∈ O(2n)",
+        "text": "f(n) ∈ O(2ⁿ)",
         "isCode": false,
         "correct": true
       },
@@ -7056,7 +7056,7 @@
     "options": [
       {
         "label": "A",
-        "text": "f(n) ∈ O(n2)",
+        "text": "f(n) ∈ O(n²)",
         "isCode": false,
         "correct": false
       },
@@ -7100,7 +7100,7 @@
       },
       {
         "label": "B",
-        "text": "f(n) ∈ O(n2)",
+        "text": "f(n) ∈ O(n²)",
         "isCode": false,
         "correct": false
       },
@@ -7170,19 +7170,19 @@
     "options": [
       {
         "label": "A",
-        "text": "x1 = true, x2 = true, x3 = true",
+        "text": "x₁ = true, x₂ = true, x₃ = true",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "x1 = false, x2 = true, x3 = false",
+        "text": "x₁ = false, x₂ = true, x₃ = false",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "x1 = true, x2 = false, x3 = true",
+        "text": "x₁ = true, x₂ = false, x₃ = true",
         "isCode": false,
         "correct": false
       }
@@ -7197,10 +7197,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Exprimaţi în binar, octal, hexazecimal numărul zecimal 3.62510."
+        "value": "Exprimaţi în binar, octal, hexazecimal numărul zecimal 3.625₁₀."
       }
     ],
-    "text": "Exprimaţi în binar, octal, hexazecimal numărul zecimal 3.62510.",
+    "text": "Exprimaţi în binar, octal, hexazecimal numărul zecimal 3.625₁₀.",
     "options": [
       {
         "label": "A",
@@ -7243,10 +7243,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Convertiţiîn zecimal numerele următoare (baza este indicatăîn indice): DA.C16, 27.48, 11011.1012."
+        "value": "Convertiţiîn zecimal numerele următoare (baza este indicatăîn indice): DA.C₁₆, 27.4₈, 11011.101₂."
       }
     ],
-    "text": "Convertiţiîn zecimal numerele următoare (baza este indicatăîn indice): DA.C16, 27.48, 11011.1012.",
+    "text": "Convertiţiîn zecimal numerele următoare (baza este indicatăîn indice): DA.C₁₆, 27.4₈, 11011.101₂.",
     "options": [
       {
         "label": "A",
@@ -7289,10 +7289,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Daţi valoarea zecimală cu semn a numărului B716 codificat în complement faţă de 1 (cod invers)"
+        "value": "Daţi valoarea zecimală cu semn a numărului B7₁₆ codificat în complement faţă de 1 (cod invers)"
       }
     ],
-    "text": "Daţi valoarea zecimală cu semn a numărului B716 codificat în complement faţă de 1 (cod invers)",
+    "text": "Daţi valoarea zecimală cu semn a numărului B7₁₆ codificat în complement faţă de 1 (cod invers)",
     "options": [
       {
         "label": "A",
@@ -7381,32 +7381,32 @@
     "content": [
       {
         "type": "text",
-        "value": "Daţi sub forma a × 2b (a şi b în sistemul zecimal) valoarea care corespunde reprezentării în VMSP (virgulă mobilă simplă precizie, adică: 1 bit = semnul mantisei, 8 biţi = exponentul decalat, 23 biţi = mantisa normalizată), 276600000008."
+        "value": "Daţi sub forma a × 2ᵇ (a şi b în sistemul zecimal) valoarea care corespunde reprezentării în VMSP (virgulă mobilă simplă precizie, adică: 1 bit = semnul mantisei, 8 biţi = exponentul decalat, 23 biţi = mantisa normalizată), 27660000000₈."
       }
     ],
-    "text": "Daţi sub forma a × 2b (a şi b în sistemul zecimal) valoarea care corespunde reprezentării în VMSP (virgulă mobilă simplă precizie, adică: 1 bit = semnul mantisei, 8 biţi = exponentul decalat, 23 biţi = mantisa normalizată), 276600000008.",
+    "text": "Daţi sub forma a × 2ᵇ (a şi b în sistemul zecimal) valoarea care corespunde reprezentării în VMSP (virgulă mobilă simplă precizie, adică: 1 bit = semnul mantisei, 8 biţi = exponentul decalat, 23 biţi = mantisa normalizată), 27660000000₈.",
     "options": [
       {
         "label": "A",
-        "text": "0.8 × 24;",
+        "text": "0.8 × 2⁴;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "−0.5 × 2−3;",
+        "text": "−0.5 × 2^(−3);",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "−8.8 × 24;",
+        "text": "−8.8 × 2⁴;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "−8.8125 × 2−4;",
+        "text": "−8.8125 × 2^(−4);",
         "isCode": false,
         "correct": false
       },
@@ -7473,10 +7473,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Fie o transmisie care utilizează codul lui Hamming cu paritate pară. Găsiţi mesajul transmis (în octal) ştiind că reprezentarea datelor de transmis (pe 16 biţi) este 7B16."
+        "value": "Fie o transmisie care utilizează codul lui Hamming cu paritate pară. Găsiţi mesajul transmis (în octal) ştiind că reprezentarea datelor de transmis (pe 16 biţi) este 7B₁₆."
       }
     ],
-    "text": "Fie o transmisie care utilizează codul lui Hamming cu paritate pară. Găsiţi mesajul transmis (în octal) ştiind că reprezentarea datelor de transmis (pe 16 biţi) este 7B16.",
+    "text": "Fie o transmisie care utilizează codul lui Hamming cu paritate pară. Găsiţi mesajul transmis (în octal) ştiind că reprezentarea datelor de transmis (pe 16 biţi) este 7B₁₆.",
     "options": [
       {
         "label": "A",
@@ -7526,31 +7526,31 @@
     "options": [
       {
         "label": "A",
-        "text": "1404418;",
+        "text": "140441₈;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "1414418;",
+        "text": "141441₈;",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "1424428;",
+        "text": "142442₈;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "C52216;",
+        "text": "C522₁₆;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "C32116;",
+        "text": "C321₁₆;",
         "isCode": false,
         "correct": true
       }
@@ -7565,38 +7565,38 @@
     "content": [
       {
         "type": "text",
-        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x3 + x + 1. Dacă se doreşte transmiterea datelor (7 biţi) cu reprezentarea octală 131, care va fimesajul trimis?"
+        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x³ + x + 1. Dacă se doreşte transmiterea datelor (7 biţi) cu reprezentarea octală 131, care va fimesajul trimis?"
       }
     ],
-    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x3 + x + 1. Dacă se doreşte transmiterea datelor (7 biţi) cu reprezentarea octală 131, care va fimesajul trimis?",
+    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x³ + x + 1. Dacă se doreşte transmiterea datelor (7 biţi) cu reprezentarea octală 131, care va fimesajul trimis?",
     "options": [
       {
         "label": "A",
-        "text": "25DC16;",
+        "text": "25DC₁₆;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "13138;",
+        "text": "1313₈;",
         "isCode": false,
         "correct": true
       },
       {
         "label": "C",
-        "text": "2CB16;",
+        "text": "2CB₁₆;",
         "isCode": false,
         "correct": true
       },
       {
         "label": "D",
-        "text": "227348;",
+        "text": "22734₈;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "2273510;",
+        "text": "22735₁₀;",
         "isCode": false,
         "correct": false
       }
@@ -7611,38 +7611,38 @@
     "content": [
       {
         "type": "text",
-        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x2 + x + 1. Dacă s-a recepţionat mesajul T = 2332 (11 biţi) să se stabilească 8 dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial."
+        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x² + x + 1. Dacă s-a recepţionat mesajul T = 2332₈ (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial."
       }
     ],
-    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x2 + x + 1. Dacă s-a recepţionat mesajul T = 2332 (11 biţi) să se stabilească 8 dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial.",
+    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x² + x + 1. Dacă s-a recepţionat mesajul T = 2332₈ (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial.",
     "options": [
       {
         "label": "A",
-        "text": "13210;",
+        "text": "132₁₀;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "B",
-        "text": "4648;",
+        "text": "464₈;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "C",
-        "text": "13416;",
+        "text": "134₁₆;",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "13616;",
+        "text": "136₁₆;",
         "isCode": false,
         "correct": true
       },
       {
         "label": "E",
-        "text": "4668;",
+        "text": "466₈;",
         "isCode": false,
         "correct": true
       }
@@ -7795,10 +7795,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Se consideră o memorie centrală unde fiecare octet este adresat separat. Calculaţi în hexazecimal adresa celui de-al 7-lea element al unui tablou cu adresa primului element 100016 şi fiecare element are 16 biţi."
+        "value": "Se consideră o memorie centrală unde fiecare octet este adresat separat. Calculaţi în hexazecimal adresa celui de-al 7-lea element al unui tablou cu adresa primului element 1000₁₆ şi fiecare element are 16 biţi."
       }
     ],
-    "text": "Se consideră o memorie centrală unde fiecare octet este adresat separat. Calculaţi în hexazecimal adresa celui de-al 7-lea element al unui tablou cu adresa primului element 100016 şi fiecare element are 16 biţi.",
+    "text": "Se consideră o memorie centrală unde fiecare octet este adresat separat. Calculaţi în hexazecimal adresa celui de-al 7-lea element al unui tablou cu adresa primului element 1000₁₆ şi fiecare element are 16 biţi.",
     "options": [
       {
         "label": "A",

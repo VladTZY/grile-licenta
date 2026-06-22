@@ -52,6 +52,34 @@ def normalize(s: str) -> str:
     return s
 
 
+# Superscript / subscript Unicode maps (for exponents like n^2 and indices k_1).
+SUP_MAP = {
+    "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶",
+    "7": "⁷", "8": "⁸", "9": "⁹", "+": "⁺", "-": "⁻", "=": "⁼", "(": "⁽",
+    ")": "⁾", "n": "ⁿ", "i": "ⁱ", "a": "ᵃ", "b": "ᵇ", "c": "ᶜ", "d": "ᵈ",
+    "e": "ᵉ", "f": "ᶠ", "g": "ᵍ", "h": "ʰ", "j": "ʲ", "k": "ᵏ", "l": "ˡ",
+    "m": "ᵐ", "o": "ᵒ", "p": "ᵖ", "r": "ʳ", "s": "ˢ", "t": "ᵗ", "u": "ᵘ",
+    "v": "ᵛ", "w": "ʷ", "x": "ˣ", "y": "ʸ", "z": "ᶻ", " ": " ",
+}
+SUB_MAP = {
+    "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅", "6": "₆",
+    "7": "₇", "8": "₈", "9": "₉", "+": "₊", "-": "₋", "=": "₌", "(": "₍",
+    ")": "₎", "a": "ₐ", "e": "ₑ", "h": "ₕ", "i": "ᵢ", "j": "ⱼ", "k": "ₖ",
+    "l": "ₗ", "m": "ₘ", "n": "ₙ", "o": "ₒ", "p": "ₚ", "r": "ᵣ", "s": "ₛ",
+    "t": "ₜ", "u": "ᵤ", "v": "ᵥ", "x": "ₓ", " ": " ",
+}
+
+
+def to_script(text: str, sup: bool) -> str:
+    """Render a super/subscript run as Unicode, falling back to ^()/plain."""
+    table = SUP_MAP if sup else SUB_MAP
+    if all(c in table for c in text):
+        return "".join(table[c] for c in text)
+    if sup:  # caret notation for exponents we can't map (e.g. n^(k+1))
+        return "^" + (text if len(text) == 1 else "(" + text + ")")
+    return text  # leave odd subscripts (arrows, ∞) inline
+
+
 def slug(s: str) -> str:
     s = normalize(s).lower()
     s = (s.replace("ă", "a").replace("â", "a").replace("î", "i")
@@ -72,33 +100,96 @@ def page_rows(page):
             for s in ln["spans"]:
                 if s["text"] != "":
                     spans.append(s)
-    spans.sort(key=lambda s: (round(s["bbox"][1] / 3), s["bbox"][0]))
-    rows = []
-    for s in spans:
-        y = s["bbox"][1]
-        if rows and abs(rows[-1]["y"] - y) < 4:
-            rows[-1]["spans"].append(s)
+    if not spans:
+        return []
+
+    # Cluster lines by the baseline of body-size text, then attach smaller
+    # super/subscript spans to the nearest baseline. Grouping by the span top
+    # fails in dense math, where a line's subscripts and the next line's
+    # superscripts interleave vertically.
+    body = [s for s in spans if s["text"].strip() and round(s["size"]) >= 9]
+    body.sort(key=lambda s: s["bbox"][3])
+    lines = []
+    for s in body:
+        b = s["bbox"][3]
+        for ln in lines:
+            if abs(ln["bot"] - b) < 5:
+                ln["spans"].append(s)
+                ln["bot"] = (ln["bot"] * (len(ln["spans"]) - 1) + b) / len(ln["spans"])
+                break
         else:
-            rows.append({"y": y, "spans": [s]})
-    for r in rows:
-        r["spans"].sort(key=lambda s: s["bbox"][0])
-    return rows
+            lines.append({"bot": b, "spans": [s]})
+
+    for s in spans:  # attach small / blank spans to the nearest baseline
+        if s["text"].strip() and round(s["size"]) >= 9:
+            continue
+        b = s["bbox"][3]
+        if lines:
+            min(lines, key=lambda ln: abs(ln["bot"] - b))["spans"].append(s)
+        else:
+            lines.append({"bot": b, "spans": [s]})
+
+    lines.sort(key=lambda ln: ln["bot"])
+    return [
+        {"y": min(s["bbox"][1] for s in ln["spans"]),
+         "spans": sorted(ln["spans"], key=lambda s: s["bbox"][0])}
+        for ln in lines
+    ]
 
 
 def line_info(row):
     """Return (text, x0, y0, is_header, all_code, any_red, code_ratio)."""
     spans = row["spans"]
+    # determine the dominant (body) font size and its baseline, so we can spot
+    # smaller raised/lowered spans as super/subscripts.
+    sized = [s for s in spans if s["text"].strip()]
+    body_size = 10.0
+    body_bot = 0.0
+    if sized:
+        szs = [round(s["size"], 1) for s in sized]
+        body_size = max(set(szs), key=szs.count)
+        bots = sorted(s["bbox"][3] for s in sized if round(s["size"], 1) == body_size)
+        body_bot = bots[len(bots) // 2] if bots else 0.0
+
+    def script_class(s):
+        if not s["text"].strip() or s["size"] > body_size - 1.5:
+            return None
+        return "sup" if s["bbox"][3] < body_bot - 1.5 else "sub"  # raised vs lowered
+
     # rebuild the row text, inserting a space wherever spans are separated by a
     # horizontal gap but no explicit space char (e.g. a header number + title).
     parts = []
     prev = None
-    for s in spans:
-        if prev is not None:
-            gap = s["bbox"][0] - prev["bbox"][2]
-            if gap > 1.2 and not parts[-1].endswith(" ") and not s["text"].startswith(" "):
-                parts.append(" ")
-        parts.append(s["text"])
-        prev = s
+    i = 0
+    while i < len(spans):
+        s = spans[i]
+        # drop tiny whitespace artifacts (kerning space around a superscript);
+        # real spacing is handled by the x-gap check below.
+        if not s["text"].strip() and s["size"] <= body_size - 1.5:
+            i += 1
+            continue
+        cls = script_class(s)
+        if cls is None:
+            if prev is not None:
+                gap = s["bbox"][0] - prev["bbox"][2]
+                if gap > 1.2 and parts and not parts[-1].endswith(" ") and not s["text"].startswith(" "):
+                    parts.append(" ")
+            parts.append(s["text"])
+            prev = s
+            i += 1
+            continue
+        # a super/subscript attaches to its base, so no leading space here.
+        # gather a run of consecutive same-class super/subscript spans
+        j = i
+        run = ""
+        while j < len(spans) and script_class(spans[j]) == cls:
+            run += spans[j]["text"]
+            j += 1
+        # short run -> a real exponent/index; long run -> a stacked fraction
+        # part (f(n)/g(n)), which we keep as plain text rather than mangle.
+        parts.append(to_script(normalize(run), cls == "sup") if len(run.strip()) <= 2 else run)
+        prev = spans[j - 1]
+        i = j
     text = normalize("".join(parts))
     x0 = min(s["bbox"][0] for s in spans)
     y0 = row["y"]
