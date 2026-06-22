@@ -115,114 +115,216 @@ FOOTER_RE = re.compile(r"^(Page\s+)?\d+$")
 QUESTION_RE = re.compile(r"^(\d+)\.\s+(.*)$", re.S)
 OPTION_RE = re.compile(r"^([A-Z])\.\s*(.*)$", re.S)
 HEADER_RE = re.compile(r"^(\d+)\s+(\S.*)$")
+LIST_RE = re.compile(r"^\d+\.\s")
+SOLUTION_RE = re.compile(r"^Solution\b[:.]?\s*(.*)$", re.I | re.S)
+# Code is sometimes typeset in a normal/roman font (OOP class listings, HTML),
+# so the monospace-font test isn't enough. These strong markers flag a line as
+# code regardless of font; once inside a code block, indented/`;`-bearing lines
+# keep it going until a clear prose line appears.
+STRONG_CODE = re.compile(
+    r"[{}]|::|<<|>>|#include|\bcout\b|\bcin\b|\bprintf\b|\bscanf\b|\bvoid\b|"
+    r"\bclass\b|\bstruct\b|\b(?:public|private|protected)\s*:|</?[A-Za-z][\w.]*[\s>/=]"
+)
+WEAK_CODE = re.compile(r"[;()]")
+PUBLIC_FIG = ROOT / "public" / "figures"
 
 
 def extract_pdf(path: Path, module_num: int):
     doc = fitz.open(path)
     module = f"Modulul {module_num}"
     questions = []
-    section_num = None
     section_name = None
     q = None  # current question dict
-    mode = None  # "question" | "code" | "options"
+    mode = None  # "q" | "options"
+    in_code = False
+    in_solution = False
+
+    def add_text(line):
+        c = q["content"]
+        if c and c[-1]["type"] == "text":
+            sep = "\n" if LIST_RE.match(line) else " "
+            c[-1]["value"] = (c[-1]["value"] + sep + line) if c[-1]["value"] else line
+        else:
+            c.append({"type": "text", "value": line})
+
+    def add_code(x, line):
+        c = q["content"]
+        if c and c[-1]["type"] == "code":
+            c[-1]["_lines"].append((x, line))
+        else:
+            c.append({"type": "code", "value": "", "_lines": [(x, line)]})
 
     def finalize():
         nonlocal q
         if q is None:
             return
-        q["text"] = q["text"].strip()
-        # rebuild code with indentation reconstructed from x positions
-        code_lines = q.pop("code_lines")
-        if code_lines:
-            base = min(x for x, _ in code_lines)
-            rendered = []
-            for x, t in code_lines:
-                indent = max(0, round((x - base) / CHAR_W))
-                rendered.append(" " * indent + t)
-            q["code"] = "\n".join(rendered).rstrip() or None
-        else:
-            q["code"] = None
+        for blk in q["content"]:
+            if blk["type"] == "code":  # reconstruct indentation from x positions
+                lines = blk.pop("_lines")
+                base = min(x for x, _ in lines)
+                blk["value"] = "\n".join(
+                    " " * max(0, round((x - base) / CHAR_W)) + t for x, t in lines
+                ).rstrip()
+        q["content"] = [b for b in q["content"] if b["type"] == "image" or b["value"].strip()]
+        q["text"] = " ".join(b["value"] for b in q["content"] if b["type"] == "text").strip()
         for opt in q["options"]:
             opt["text"] = opt["text"].strip()
+        if q.get("explanation"):
+            q["explanation"] = q["explanation"].strip()
         q["correctCount"] = sum(1 for o in q["options"] if o["correct"])
         questions.append(q)
         q = None
 
-    for page in doc:
+    for page_idx, page in enumerate(doc):
         for row in page_rows(page):
             text, x0, y0, is_header, all_code, any_red, code_ratio = line_info(row)
             stripped = text.strip()
             if not stripped:
                 continue
-            # footer / page number near the bottom of the page
             if y0 > 740 and FOOTER_RE.match(stripped):
                 continue
+            # figure captions ("Figure 1: ...") are redundant with the image
+            if re.match(r"^Figure\s+\d+", stripped):
+                continue
 
-            # section header -> subcategory
             if is_header:
                 m = HEADER_RE.match(stripped)
                 if m:
                     finalize()
-                    section_num = int(m.group(1))
                     section_name = m.group(2).strip()
                     continue
 
-            # new question
             mq = QUESTION_RE.match(stripped)
             if mq and x0 < 88 and not all_code and section_name:
                 finalize()
                 num = int(mq.group(1))
                 q = {
                     "id": f"m{module_num}-{slug(section_name)}-{num}",
-                    "module": module,
-                    "section": section_name,
-                    "number": num,
-                    "text": mq.group(2),
-                    "code": "",
-                    "code_lines": [],
-                    "options": [],
-                    "correctCount": 0,
+                    "module": module, "section": section_name, "number": num,
+                    "content": [], "text": "", "options": [], "correctCount": 0,
+                    "_pg": page_idx, "_y": y0,
                 }
-                mode = "question"
+                intro = mq.group(2).strip()
+                if intro:
+                    q["content"].append({"type": "text", "value": intro})
+                mode = "q"
+                in_code = False
+                in_solution = False
                 continue
 
             if q is None:
                 continue
 
-            # new option
             mo = OPTION_RE.match(stripped)
             if mo and x0 > 110:
+                if "_optpg" not in q:
+                    q["_optpg"], q["_opty"] = page_idx, y0
                 q["options"].append({
-                    "label": mo.group(1),
-                    "text": mo.group(2),
-                    "isCode": code_ratio > 0.6,
-                    "correct": any_red,
+                    "label": mo.group(1), "text": mo.group(2),
+                    "isCode": code_ratio > 0.6, "correct": any_red,
                 })
                 mode = "options"
                 continue
 
-            # code line
-            if all_code:
-                if mode == "options" and q["options"]:
+            if mode == "options":
+                ms = SOLUTION_RE.match(stripped)
+                if ms or in_solution:  # an explanation block after the options
+                    in_solution = True
+                    add = ms.group(1) if ms else stripped
+                    q["explanation"] = (q.get("explanation", "") + " " + add).strip()
+                elif all_code and q["options"]:
                     q["options"][-1]["text"] += "\n" + text
-                else:
-                    q["code_lines"].append((x0, text))
-                    mode = "code"
+                elif q["options"]:
+                    q["options"][-1]["text"] += " " + stripped
                 continue
 
-            # prose continuation
-            if mode == "options" and q["options"]:
-                q["options"][-1]["text"] += " " + stripped
+            # question/code region: classify line as code vs prose
+            strong = all_code or bool(STRONG_CODE.search(stripped))
+            # a wordy line or one ending in ":" is a prose lead-in, not code
+            prose_like = stripped.endswith(":") or len(re.findall(r"[^\W\d_]{3,}", stripped)) >= 4
+            if strong:
+                in_code = True
+                add_code(x0, text)
+            elif in_code and not prose_like and (x0 >= 96 or WEAK_CODE.search(stripped)):
+                add_code(x0, text)  # continuation of the current code block
             else:
-                # keep numbered sub-list items (ordering questions) on their own line
-                sep = "\n" if re.match(r"^\d+\.\s", stripped) else " "
-                q["text"] += sep + stripped
+                in_code = False
+                add_text(stripped)
 
     finalize()
+    extract_figures(doc, questions)
+    doc.close()
     return questions
 
 
+def extract_figures(doc, questions):
+    """Render diagrams (raster trees + vector graphs) per question to PNGs.
+
+    A figure sits between the question text and the first option, so we scan
+    that region for raster images / vector drawings, union their bounding
+    boxes, and rasterise that clip to public/figures/<id>-N.png.
+    """
+    PUBLIC_FIG.mkdir(parents=True, exist_ok=True)
+    cache = {}
+
+    def graphics(pg):
+        if pg not in cache:
+            page = doc[pg]
+            imgs = [info["bbox"] for info in page.get_image_info()]
+            draws = [d["rect"] for d in page.get_drawings()
+                     if (d["rect"][2] - d["rect"][0]) > 2 and (d["rect"][3] - d["rect"][1]) > 2]
+            cache[pg] = (imgs, draws)
+        return cache[pg]
+
+    for i, q in enumerate(questions):
+        spg, sy = q["_pg"], q["_y"]
+        if "_optpg" in q:
+            epg, ey = q["_optpg"], q["_opty"]
+        elif i + 1 < len(questions) and questions[i + 1]["_pg"] >= spg:
+            epg, ey = questions[i + 1]["_pg"], questions[i + 1]["_y"]
+        else:
+            epg, ey = spg, doc[spg].rect.height
+
+        paths = []
+        for pg in range(spg, min(epg, len(doc) - 1) + 1):
+            page = doc[pg]
+            y_lo = sy if pg == spg else 0
+            y_hi = ey if pg == epg else page.rect.height
+            imgs, draws = graphics(pg)
+            rects = [b for b in imgs if b[1] >= y_lo - 2 and b[3] <= y_hi + 2]
+            has_raster = bool(rects)
+            dr = [b for b in draws if b[1] >= y_lo - 2 and b[3] <= y_hi + 2]
+            rects += dr
+            if not rects:
+                continue
+            x0 = min(r[0] for r in rects); yy0 = min(r[1] for r in rects)
+            x1 = max(r[2] for r in rects); yy1 = max(r[3] for r in rects)
+            w, h = x1 - x0, yy1 - yy0
+            # require a real figure: a raster image, or a sizeable cluster of strokes
+            if not has_raster and (len(dr) < 5 or w < 30 or h < 30):
+                continue
+            if w < 12 or h < 12:
+                continue
+            clip = fitz.Rect(x0 - 6, yy0 - 6, x1 + 6, yy1 + 6)
+            pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(2.5, 2.5))
+            fname = f"{q['id']}-{len(paths) + 1}.png"
+            pix.save(str(PUBLIC_FIG / fname))
+            paths.append(f"/figures/{fname}")
+
+        for p in paths:
+            q["content"].append({"type": "image", "value": p})
+
+    for q in questions:  # drop temp position keys
+        for k in ("_pg", "_y", "_optpg", "_opty"):
+            q.pop(k, None)
+
+
 def main():
+    # clear stale figures so removed/renamed ones don't linger
+    if PUBLIC_FIG.exists():
+        for f in PUBLIC_FIG.glob("*.png"):
+            f.unlink()
+
     all_q = []
     for n in (1, 2, 3):
         pdf = PDF_DIR / f"pdf_{n}.pdf"
@@ -253,6 +355,12 @@ def main():
     print(f"Questions with NO options parsed: {no_opts}")
     dup = [k for k, v in Counter(q["id"] for q in all_q).items() if v > 1]
     print(f"Duplicate ids: {len(dup)}", dup[:5])
+    n_img = sum(1 for q in all_q for b in q["content"] if b["type"] == "image")
+    q_img = sum(1 for q in all_q if any(b["type"] == "image" for b in q["content"]))
+    q_code = sum(1 for q in all_q if any(b["type"] == "code" for b in q["content"]))
+    q_expl = sum(1 for q in all_q if q.get("explanation"))
+    print(f"Figures: {n_img} images across {q_img} questions | "
+          f"questions with code: {q_code} | explanations: {q_expl}")
 
 
 if __name__ == "__main__":

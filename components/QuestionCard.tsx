@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Question } from "@/lib/types";
+import QuestionContent from "./QuestionContent";
 
 interface Props {
   question: Question;
@@ -62,15 +63,7 @@ export default function QuestionCard({
         )}
       </div>
 
-      <p className="prompt text-[15px] font-medium leading-relaxed text-slate-900">
-        {question.text}
-      </p>
-
-      {question.code && (
-        <pre className="mt-3 overflow-x-auto rounded-md bg-slate-900 p-3 text-xs leading-relaxed text-slate-100">
-          <code>{question.code}</code>
-        </pre>
-      )}
+      <QuestionContent content={question.content} />
 
       <ul className="mt-4 space-y-2">
         {question.options.map((opt) => {
@@ -151,6 +144,13 @@ export default function QuestionCard({
         <p className="mt-3 text-xs text-slate-500">
           Această întrebare nu are niciun răspuns marcat ca fiind corect.
         </p>
+      )}
+
+      {revealed && question.explanation && (
+        <div className="mt-3 rounded-md bg-slate-50 p-3 text-sm text-slate-700">
+          <span className="font-semibold">Explicație: </span>
+          {question.explanation}
+        </div>
       )}
     </div>
   );

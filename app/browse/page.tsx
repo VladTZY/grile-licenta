@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { QUESTIONS, TREE } from "@/lib/questions";
 import Filters, { sectionKey } from "@/components/Filters";
+import QuestionContent from "@/components/QuestionContent";
 import {
   Overrides,
   applyOverride,
@@ -142,12 +143,7 @@ export default function BrowsePage() {
                   </span>
                 )}
               </div>
-              <p className="prompt text-sm font-medium text-slate-900">{q.text}</p>
-              {q.code && (
-                <pre className="mt-2 overflow-x-auto rounded bg-slate-900 p-2 text-xs text-slate-100">
-                  <code>{q.code}</code>
-                </pre>
-              )}
+              <QuestionContent content={q.content} />
               <ul className="mt-3 space-y-1">
                 {q.options.map((o) => (
                   <li key={o.label}>
