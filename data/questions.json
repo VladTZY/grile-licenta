@@ -1534,13 +1534,13 @@
       },
       {
         "label": "C",
-        "text": "11 17 5",
+        "text": "11\n17\n5",
         "isCode": false,
         "correct": true
       },
       {
         "label": "D",
-        "text": "11 17 5 23 11",
+        "text": "11\n17\n5\n23\n11",
         "isCode": false,
         "correct": false
       }
@@ -2118,8 +2118,12 @@
     "number": 12,
     "content": [
       {
-        "type": "text",
-        "value": "Coloana din stanga reprezinta un input de stringuri ce trebuie sortate; coloana din dreapta reprez- inta strigurile sortate; celelalte coloane reprezinta un pas intermediar al unuia dintre algoritmii: quicksort, mergesort top-down, merge sort botton-up, heapsort. Care este ordinea algoritmilor tinand cont de coloanele afisate? navy wine mist blue blue bark plum teal coal gray coal blue coal silk jade rose gray cafe jade plum blue mint jade coal blue sage cafe lime lime corn pink pink herb navy mint dusk rose rose gray jade navy gray gray jade leaf teal pink herb teal navy dusk coal plum jade ruby ruby mint ruby rose leaf mint pine lime plum ruby lime lime palm bark pink teal mint silk coal corn silk bark mist corn corn navy corn corn navy bark bark wine bark dusk palm wine gray silk wine leaf pine dusk dusk ruby dusk silk pink leaf leaf teal leaf wine plum herb herb sage herb cafe rose sage blue rose sage herb ruby cafe cafe pink cafe mist sage mist mist pine mist palm silk pine mint palm pine pine teal palm lime plum palm sage wine 0 - - - - 1"
+        "type": "image",
+        "value": "/figures/m1-structuri-de-date-si-tehnici-de-elaborare-a-algoritmilor-12-enunt1.png"
+      },
+      {
+        "type": "image",
+        "value": "/figures/m1-structuri-de-date-si-tehnici-de-elaborare-a-algoritmilor-12-enunt2.png"
       }
     ],
     "text": "Coloana din stanga reprezinta un input de stringuri ce trebuie sortate; coloana din dreapta reprez- inta strigurile sortate; celelalte coloane reprezinta un pas intermediar al unuia dintre algoritmii: quicksort, mergesort top-down, merge sort botton-up, heapsort. Care este ordinea algoritmilor tinand cont de coloanele afisate? navy wine mist blue blue bark plum teal coal gray coal blue coal silk jade rose gray cafe jade plum blue mint jade coal blue sage cafe lime lime corn pink pink herb navy mint dusk rose rose gray jade navy gray gray jade leaf teal pink herb teal navy dusk coal plum jade ruby ruby mint ruby rose leaf mint pine lime plum ruby lime lime palm bark pink teal mint silk coal corn silk bark mist corn corn navy corn corn navy bark bark wine bark dusk palm wine gray silk wine leaf pine dusk dusk ruby dusk silk pink leaf leaf teal leaf wine plum herb herb sage herb cafe rose sage blue rose sage herb ruby cafe cafe pink cafe mist sage mist mist pine mist palm silk pine mint palm pine pine teal palm lime plum palm sage wine 0 - - - - 1",
@@ -4896,7 +4900,7 @@
       },
       {
         "label": "B",
-        "text": "Hello Java;",
+        "text": "Hello\nJava;",
         "isCode": false,
         "correct": false
       },
@@ -6466,8 +6470,8 @@
     "number": 1,
     "content": [
       {
-        "type": "text",
-        "value": "Care este expresia timpului de execuţie T (n) al următorului algoritm în cazul cel mai favorabil, în cazul mediu şi în cazul cel mai defavorabil, unde n notează dimensiunea setului de intrare, iar k, k₁, . . . , k₈ - orice constantă pozitivă: procedure algoritm(v, n) for i ← 2, n do key ← v[i] j ← i − 1 while (j > 0) and (v[j] > key) do v[j + 1] ← v[j] j ← j − 1 end while v[j] ← key end for end procedure"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-1-enunt.png"
       }
     ],
     "text": "Care este expresia timpului de execuţie T (n) al următorului algoritm în cazul cel mai favorabil, în cazul mediu şi în cazul cel mai defavorabil, unde n notează dimensiunea setului de intrare, iar k, k₁, . . . , k₈ - orice constantă pozitivă: procedure algoritm(v, n) for i ← 2, n do key ← v[i] j ← i − 1 while (j > 0) and (v[j] > key) do v[j + 1] ← v[j] j ← j − 1 end while v[j] ← key end for end procedure",
@@ -6486,25 +6490,25 @@
       },
       {
         "label": "C",
-        "text": "k, k1n + k2, k2n2 + k3n + k4",
+        "text": "k, k₁n + k₂, k₂n² + k₃n + k₄",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "k1n + k2, k3n + k4, k5n2 + k6n + k7",
+        "text": "k₁n + k₂, k₃n + k₄, k₅n² + k₆n + k₇",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "k, k1n2 + k2n + k3, k4n2 + k5n + k6",
+        "text": "k, k₁n² + k₂n + k₃, k₄n² + k₅n + k₆",
         "isCode": false,
         "correct": false
       },
       {
         "label": "F",
-        "text": "k1n + k2, k3n2 + k4n + k5, k6n2 + k7n + k8",
+        "text": "k₁n + k₂, k₃n² + k₄n + k₅, k₆n² + k₇n + k₈",
         "isCode": false,
         "correct": true
       }
@@ -6526,21 +6530,21 @@
     "options": [
       {
         "label": "A",
-        "text": "limn→∞ TT12((nn)) = 0",
+        "text": "limn→∞ TT¹₂((nn)) = 0",
         "isCode": false,
         "correct": false,
         "image": "/figures/m1-metode-de-analiza-a-algoritmilor-2-optA.png"
       },
       {
         "label": "B",
-        "text": "limn→∞ TT12((nn)) = ∞",
+        "text": "limn→∞ TT¹₂((nn)) = ∞",
         "isCode": false,
         "correct": false,
         "image": "/figures/m1-metode-de-analiza-a-algoritmilor-2-optB.png"
       },
       {
         "label": "C",
-        "text": "limn→∞ TT12((nn)) = k",
+        "text": "limn→∞ TT¹₂((nn)) = k",
         "isCode": false,
         "correct": true,
         "image": "/figures/m1-metode-de-analiza-a-algoritmilor-2-optC.png"
@@ -6762,8 +6766,8 @@
     "number": 9,
     "content": [
       {
-        "type": "text",
-        "value": "Care este ordinul de complexitate al algoritmului de căutare binară? procedure binsearch(start, finish) if start=finish then return start end if mij ← (start + finish + 1)/2 if x ≤ v[mij] then binsearch(start, mij) else binsearch(mij+1, finish) end if end procedure"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-9-enunt.png"
       }
     ],
     "text": "Care este ordinul de complexitate al algoritmului de căutare binară? procedure binsearch(start, finish) if start=finish then return start end if mij ← (start + finish + 1)/2 if x ≤ v[mij] then binsearch(start, mij) else binsearch(mij+1, finish) end if end procedure",
@@ -6816,7 +6820,7 @@
       },
       {
         "label": "C",
-        "text": "Θ(xⁿ) √",
+        "text": "Θ(xⁿ)",
         "isCode": false,
         "correct": false
       }
@@ -6830,11 +6834,11 @@
     "number": 11,
     "content": [
       {
-        "type": "text",
-        "value": "Care este ordinul de complexitate al funcţiei f(n) cu relaţia de recurenţă t(n) = 2t( n) + log n?"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-11-enunt.png"
       }
     ],
-    "text": "Care este ordinul de complexitate al funcţiei f(n) cu relaţia de recurenţă t(n) = 2t( n) + log n?",
+    "text": "",
     "options": [
       {
         "label": "A",
@@ -6852,7 +6856,8 @@
         "label": "C",
         "text": "f(n) ∈ O(n¹² )",
         "isCode": false,
-        "correct": false
+        "correct": false,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-11-optC.png"
       }
     ],
     "correctCount": 1
@@ -7617,10 +7622,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x2 + x + 1. Dacă s-a recepţionat mesajul T = 23328 (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial."
+        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x² + x + 1. Dacă s-a recepţionat mesajul T = 2332₈ (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial."
       }
     ],
-    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x2 + x + 1. Dacă s-a recepţionat mesajul T = 23328 (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial.",
+    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x² + x + 1. Dacă s-a recepţionat mesajul T = 2332₈ (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial.",
     "options": [
       {
         "label": "A",

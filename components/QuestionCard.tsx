@@ -97,7 +97,9 @@ export default function QuestionCard({
                 ) : (
                   <span
                     className={`min-w-0 flex-1 text-sm text-slate-800 ${
-                      opt.isCode ? "whitespace-pre-wrap break-all font-mono" : "break-words"
+                      opt.isCode
+                        ? "whitespace-pre-wrap break-all font-mono"
+                        : "whitespace-pre-line break-words"
                     }`}
                   >
                     {opt.text}

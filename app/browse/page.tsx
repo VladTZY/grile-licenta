@@ -165,7 +165,9 @@ export default function BrowsePage() {
                       ) : (
                         <span
                           className={`min-w-0 flex-1 ${
-                            o.isCode ? "whitespace-pre-wrap break-all font-mono" : "break-words"
+                            o.isCode
+                              ? "whitespace-pre-wrap break-all font-mono"
+                              : "whitespace-pre-line break-words"
                           }`}
                         >
                           {o.text}

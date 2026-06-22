@@ -158,13 +158,6 @@ def line_info(row):
             return None
         return "sup" if s["bbox"][3] < body_bot - 1.5 else "sub"  # raised vs lowered
 
-    # A row with BOTH raised and lowered small text is a stacked fraction
-    # (numerator + denominator share the operator baseline). Leave those plain
-    # rather than mangle them into super/subscripts; they get rasterised as an
-    # image elsewhere. A row with only raised small text is a real exponent.
-    classes = {script_class(s) for s in spans}
-    is_fraction = "sup" in classes and "sub" in classes
-
     # rebuild the row text, inserting a space wherever spans are separated by a
     # horizontal gap but no explicit space char (e.g. a header number + title).
     parts = []
@@ -194,8 +187,7 @@ def line_info(row):
         while j < len(spans) and script_class(spans[j]) == cls:
             run += spans[j]["text"]
             j += 1
-        # fraction row -> keep plain; otherwise render as super/subscript
-        parts.append(run if is_fraction else to_script(normalize(run), cls == "sup"))
+        parts.append(to_script(normalize(run), cls == "sup"))
         prev = spans[j - 1]
         i = j
     text = normalize("".join(parts))
@@ -237,6 +229,7 @@ def extract_pdf(path: Path, module_num: int):
     mode = None  # "q" | "options"
     in_code = False
     in_solution = False
+    radical_pending = None  # y of a stray √ glyph that belongs to the next question
 
     def add_text(line):
         c = q["content"]
@@ -277,6 +270,14 @@ def extract_pdf(path: Path, module_num: int):
                 ).rstrip()
         q["content"] = [b for b in q["content"] if b["type"] == "image" or b["value"].strip()]
         q["text"] = " ".join(b["value"] for b in q["content"] if b["type"] == "text").strip()
+        # algorithm2e pseudocode (normal-font, "← / end procedure") garbles as
+        # one line of prose; rasterise the whole enunț so it stays formatted.
+        if re.search(r"\bend\s+(procedure|for|while|if)\b", q["text"], re.I):
+            q["_efrac"] = True
+        # the string-sorting question has a multi-column table that can't be
+        # linearised -> rasterise the whole enunț (incl. the table page)
+        if re.search(r"coloana din st", q["text"], re.I):
+            q["_efrac"] = True
         for opt in q["options"]:
             opt["text"] = opt["text"].strip()
         if q.get("explanation"):
@@ -288,10 +289,26 @@ def extract_pdf(path: Path, module_num: int):
     for page_idx, page in enumerate(doc):
         # fraction bars: thin horizontal vector lines mark limits/fractions,
         # which are 2-D and get rasterised as images.
-        # short, thin horizontal lines are fraction bars; long ones are box
-        # rules (algorithm2e frames), which we must not treat as fractions.
-        bars = [(r[1] + r[3]) / 2 for d in page.get_drawings()
-                for r in [d["rect"]] if 6 < (r[2] - r[0]) < 60 and (r[3] - r[1]) < 3]
+        # A fraction bar is a short thin horizontal line with text both above
+        # (numerator) and below (denominator). The above/below test rejects
+        # underscores (mysql_query) and the long/wide test rejects box rules.
+        boxes = [s["bbox"] for b in page.get_text("dict")["blocks"]
+                 for l in b.get("lines", []) for s in l["spans"] if s["text"].strip()]
+        bars = []
+        for d in page.get_drawings():
+            r = d["rect"]
+            if not (3 < (r[2] - r[0]) < 60 and (r[3] - r[1]) < 3):
+                continue
+            cy, x0c, x1c = (r[1] + r[3]) / 2, r[0], r[2]
+
+            def near(bb):  # span horizontally overlaps the bar
+                return bb[0] < x1c + 3 and bb[2] > x0c - 3
+
+            cen = [(bb[1] + bb[3]) / 2 for bb in boxes if near(bb)]
+            above = any(cy - 13 <= c <= cy - 1 for c in cen)
+            below = any(cy + 1 <= c <= cy + 13 for c in cen)
+            if above and below:
+                bars.append(cy)
         for row in page_rows(page):
             text, x0, y0, is_header, all_code, any_red, code_ratio = line_info(row)
             stripped = text.strip()
@@ -304,6 +321,12 @@ def extract_pdf(path: Path, module_num: int):
             near_bar = any(rtop - 7 <= b <= rbot + 7 for b in bars)
             # figure captions ("Figure 1: ...") are redundant with the image
             if re.match(r"^Figure\s+\d+", stripped):
+                continue
+            # a radical sign (√) is rendered as a stray glyph floating above the
+            # line it belongs to (the next question); remember it and skip it so
+            # it doesn't leak into the previous option.
+            if stripped == "√":
+                radical_pending = rtop
                 continue
 
             if is_header:
@@ -332,6 +355,11 @@ def extract_pdf(path: Path, module_num: int):
                 if near_bar:  # enunț contains a limit/fraction -> rasterise it
                     q["_efrac"] = True
                     q["content"] = []  # drop the garbled intro text
+                if radical_pending is not None:  # enunț has a radical (√) -> image it
+                    q["_efrac"] = True
+                    q["_radtop"] = radical_pending
+                    q["content"] = []
+                    radical_pending = None
                 continue
 
             if q is None:
@@ -344,6 +372,7 @@ def extract_pdf(path: Path, module_num: int):
                 opt = {
                     "label": mo.group(1), "text": mo.group(2),
                     "isCode": code_ratio > 0.6, "correct": any_red,
+                    "_lastright": max(s["bbox"][2] for s in row["spans"]),
                 }
                 if near_bar:  # option is a limit/fraction -> rasterise it
                     opt["_frac"] = {
@@ -371,7 +400,12 @@ def extract_pdf(path: Path, module_num: int):
                 elif all_code and q["options"]:
                     q["options"][-1]["text"] += "\n" + text
                 elif q["options"]:
-                    q["options"][-1]["text"] += " " + stripped
+                    last = q["options"][-1]
+                    # if the previous line ended well short of the margin, this is
+                    # a genuine new line (e.g. multi-line program output), not a wrap
+                    sep = "\n" if last.get("_lastright", 999) < 420 else " "
+                    last["text"] += sep + stripped
+                    last["_lastright"] = max(s["bbox"][2] for s in row["spans"])
                 continue
 
             # centred display math (recurrence/piecewise formulas) is 2-D and
@@ -410,6 +444,22 @@ def extract_pdf(path: Path, module_num: int):
     extract_figures(doc, questions)
     doc.close()
     return questions
+
+
+def save_pixmap(pix, path):
+    """Save a rasterised region, converting red ink to black so a correct
+    answer (marked red in the source) isn't given away in quiz mode."""
+    if pix.n >= 3 and not pix.alpha:
+        buf = bytearray(pix.samples)
+        n = pix.n
+        for i in range(0, len(buf), n):
+            r, g, b = buf[i], buf[i + 1], buf[i + 2]
+            if r > 100 and r > g + 30 and r > b + 30:  # reddish -> grey by ink density
+                v = min(g, b)
+                buf[i] = buf[i + 1] = buf[i + 2] = v
+        fitz.Pixmap(pix.colorspace, pix.width, pix.height, bytes(buf), pix.alpha).save(path)
+    else:
+        pix.save(path)
 
 
 def extract_figures(doc, questions):
@@ -463,7 +513,7 @@ def extract_figures(doc, questions):
             clip = fitz.Rect(x0 - 6, yy0 - 6, x1 + 6, yy1 + 6)
             pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(2.5, 2.5))
             fname = f"{q['id']}-{len(paths) + 1}.png"
-            pix.save(str(PUBLIC_FIG / fname))
+            save_pixmap(pix, str(PUBLIC_FIG / fname))
             paths.append(f"/figures/{fname}")
 
         for p in paths:
@@ -476,7 +526,7 @@ def extract_figures(doc, questions):
             clip = fitz.Rect(m["x0"] - 8, m["y0"] - 1, m["x1"] + 8, m["y1"] + 4)
             pix = doc[m["pg"]].get_pixmap(clip=clip, matrix=fitz.Matrix(3, 3))
             fname = f"{q['id']}-math.png"
-            pix.save(str(PUBLIC_FIG / fname))
+            save_pixmap(pix, str(PUBLIC_FIG / fname))
             q["content"].append({"type": "image", "value": f"/figures/{fname}"})
 
         # rasterise limit/fraction OPTIONS (2-D math) as per-option images
@@ -487,25 +537,35 @@ def extract_figures(doc, questions):
             clip = fitz.Rect(f["lblx1"] + 1, f["y0"] - 3, f["x1"] + 6, f["y1"] + 3)
             pix = doc[f["pg"]].get_pixmap(clip=clip, matrix=fitz.Matrix(3, 3))
             fname = f"{q['id']}-opt{opt['label']}.png"
-            pix.save(str(PUBLIC_FIG / fname))
+            save_pixmap(pix, str(PUBLIC_FIG / fname))
             opt["image"] = f"/figures/{fname}"
 
-        # rasterise an enunț containing a limit/fraction as a single image
+        # rasterise an enunț with limit/fraction/radical/pseudocode/table as image(s)
         if q.get("_efrac"):
-            pg = q["_pg"]
-            y1 = q["_opty"] if q.get("_optpg") == pg else doc[pg].rect.height - 40
-            clip = fitz.Rect(86, q["_y"] - 2, doc[pg].rect.width - 45, y1 - 4)
-            pix = doc[pg].get_pixmap(clip=clip, matrix=fitz.Matrix(3, 3))
-            fname = f"{q['id']}-enunt.png"
-            pix.save(str(PUBLIC_FIG / fname))
-            q["content"] = ([{"type": "image", "value": f"/figures/{fname}"}]
-                            + [b for b in q["content"] if b["type"] != "text"])
+            spg = q["_pg"]
+            epg = q.get("_optpg", spg)
+            sy = min(q["_y"], q.get("_radtop", q["_y"]))
+            ey = q["_opty"] if "_optpg" in q else doc[spg].rect.height - 40
+            imgs = []
+            for pg in range(spg, epg + 1):
+                top = sy - 2 if pg == spg else 40
+                bot = (ey - 4) if pg == epg else doc[pg].rect.height - 40
+                if bot - top < 8:
+                    continue
+                clip = fitz.Rect(86, top, doc[pg].rect.width - 45, bot)
+                pix = doc[pg].get_pixmap(clip=clip, matrix=fitz.Matrix(3, 3))
+                suffix = f"-enunt{pg - spg + 1}" if epg > spg else "-enunt"
+                fname = f"{q['id']}{suffix}.png"
+                save_pixmap(pix, str(PUBLIC_FIG / fname))
+                imgs.append({"type": "image", "value": f"/figures/{fname}"})
+            q["content"] = imgs + [b for b in q["content"] if b["type"] != "text"]
 
     for q in questions:  # drop temp position keys
-        for k in ("_pg", "_y", "_optpg", "_opty", "_math", "_efrac"):
+        for k in ("_pg", "_y", "_optpg", "_opty", "_math", "_efrac", "_radtop"):
             q.pop(k, None)
         for opt in q["options"]:
             opt.pop("_frac", None)
+            opt.pop("_lastright", None)
 
 
 def main():
