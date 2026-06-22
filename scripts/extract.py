@@ -245,6 +245,17 @@ def extract_pdf(path: Path, module_num: int):
         else:
             c.append({"type": "code", "value": "", "_lines": [(x, line)]})
 
+    def add_math(pg, spans):
+        # grow the bounding box of a centred display-math region (rasterised later)
+        x0 = min(s["bbox"][0] for s in spans); y0 = min(s["bbox"][1] for s in spans)
+        x1 = max(s["bbox"][2] for s in spans); y1 = max(s["bbox"][3] for s in spans)
+        m = q.get("_math")
+        if not m or m["pg"] != pg:
+            q["_math"] = {"pg": pg, "x0": x0, "y0": y0, "x1": x1, "y1": y1}
+        else:
+            m["x0"] = min(m["x0"], x0); m["y0"] = min(m["y0"], y0)
+            m["x1"] = max(m["x1"], x1); m["y1"] = max(m["y1"], y1)
+
     def finalize():
         nonlocal q
         if q is None:
@@ -329,6 +340,25 @@ def extract_pdf(path: Path, module_num: int):
                     q["options"][-1]["text"] += " " + stripped
                 continue
 
+            # centred display math (recurrence/piecewise formulas) is 2-D and
+            # doesn't linearise; capture its region to rasterise as an image.
+            row_x0 = min(s["bbox"][0] for s in row["spans"])
+            if row_x0 > 200:
+                add_math(page_idx, row["spans"])
+                in_code = False
+                continue
+            # a formula brace sometimes shares a line with prose ("...forma {").
+            # Require a large gap before it so we don't grab braces in code.
+            rs = row["spans"]
+            braces = [s for i, s in enumerate(rs)
+                      if s["text"].strip() in ("{", "}") and s["bbox"][0] > 200
+                      and s["bbox"][0] - (rs[i - 1]["bbox"][2] if i else 0) > 40]
+            if braces:
+                add_math(page_idx, braces)
+                stripped = re.sub(r"\s*[{}]\s*$", "", stripped).strip()
+                if not stripped:
+                    continue
+
             # question/code region: classify line as code vs prose
             strong = all_code or bool(STRONG_CODE.search(stripped))
             # a wordy line or one ending in ":" is a prose lead-in, not code
@@ -405,8 +435,18 @@ def extract_figures(doc, questions):
         for p in paths:
             q["content"].append({"type": "image", "value": p})
 
+        # rasterise a centred display-math region (recurrence/piecewise formula)
+        m = q.get("_math")
+        if m:
+            # tight top padding so the question-text line just above isn't clipped in
+            clip = fitz.Rect(m["x0"] - 8, m["y0"] - 1, m["x1"] + 8, m["y1"] + 4)
+            pix = doc[m["pg"]].get_pixmap(clip=clip, matrix=fitz.Matrix(3, 3))
+            fname = f"{q['id']}-math.png"
+            pix.save(str(PUBLIC_FIG / fname))
+            q["content"].append({"type": "image", "value": f"/figures/{fname}"})
+
     for q in questions:  # drop temp position keys
-        for k in ("_pg", "_y", "_optpg", "_opty"):
+        for k in ("_pg", "_y", "_optpg", "_opty", "_math"):
             q.pop(k, None)
 
 

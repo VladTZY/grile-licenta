@@ -6862,8 +6862,8 @@
         "value": "Care este ordinul de creştere al unui algoritm având timpul de execuţie de forma următoare:"
       },
       {
-        "type": "code",
-        "value": "      { \n        t(n − 1) + n, n > 0\nt(n) =\n        0, n = 0"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-12-math.png"
       }
     ],
     "text": "Care este ordinul de creştere al unui algoritm având timpul de execuţie de forma următoare:",
@@ -6900,8 +6900,8 @@
         "value": "Care este ordinul de creştere al unui algoritm având timpul de execuţie de forma următoare:"
       },
       {
-        "type": "code",
-        "value": "      { \n        t(n/2), n > 1\nt(n) =\n        1, n = 1"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-13-math.png"
       }
     ],
     "text": "Care este ordinul de creştere al unui algoritm având timpul de execuţie de forma următoare:",
@@ -6935,14 +6935,14 @@
     "content": [
       {
         "type": "text",
-        "value": "Care este ordinul de creştere al algoritmului pentru problema Turnurilor din Hanoi având timpul"
+        "value": "Care este ordinul de creştere al algoritmului pentru problema Turnurilor din Hanoi având timpul de execuţie de forma"
       },
       {
-        "type": "code",
-        "value": "de execuţie de forma { \n                                   2t(n − 1) + 1, n > 1\n                           t(n) =\n                                   1, n = 1"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-14-math.png"
       }
     ],
-    "text": "Care este ordinul de creştere al algoritmului pentru problema Turnurilor din Hanoi având timpul",
+    "text": "Care este ordinul de creştere al algoritmului pentru problema Turnurilor din Hanoi având timpul de execuţie de forma",
     "options": [
       {
         "label": "A",
@@ -6976,8 +6976,8 @@
         "value": "Care este ordinul de creştere al unui algoritm având timpul de execuţie de forma următoare:"
       },
       {
-        "type": "code",
-        "value": "      { \n        2t(n/2) + 1, n > 2\nt(n) =\n        1, n = 2"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-15-math.png"
       }
     ],
     "text": "Care este ordinul de creştere al unui algoritm având timpul de execuţie de forma următoare:",
@@ -7048,8 +7048,8 @@
         "value": "Să se indice ordinul de creştere al funcţiei f(n) cu următoarea relaţie de recurenţă:"
       },
       {
-        "type": "code",
-        "value": "      { \n        t(n − 1) + 1, n > 0\nt(n) =\n        0, n = 0"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-17-math.png"
       }
     ],
     "text": "Să se indice ordinul de creştere al funcţiei f(n) cu următoarea relaţie de recurenţă:",
@@ -7086,8 +7086,8 @@
         "value": "Să se indice ordinul de creştere al funcţiei f(n) cu următoarea relaţie de recurenţă:"
       },
       {
-        "type": "code",
-        "value": "      { \n        n(t(n − 1) + 2), n > 1\nt(n) =\n        0, n = 1"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-18-math.png"
       }
     ],
     "text": "Să se indice ordinul de creştere al funcţiei f(n) cu următoarea relaţie de recurenţă:",
@@ -7124,8 +7124,8 @@
         "value": "Să se indice ordinul de creştere al funcţiei f(n) cu următoarea relaţie de recurenţă:"
       },
       {
-        "type": "code",
-        "value": "      { \n        2t(n/2) + n, n > 1\nt(n) =\n        1, n = 1"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-19-math.png"
       }
     ],
     "text": "Să se indice ordinul de creştere al funcţiei f(n) cu următoarea relaţie de recurenţă:",
