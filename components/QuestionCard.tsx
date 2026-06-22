@@ -91,13 +91,18 @@ export default function QuestionCard({
                 >
                   {opt.label}
                 </span>
-                <span
-                  className={`min-w-0 flex-1 text-sm text-slate-800 ${
-                    opt.isCode ? "whitespace-pre-wrap break-all font-mono" : "break-words"
-                  }`}
-                >
-                  {opt.text}
-                </span>
+                {opt.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={opt.image} alt={opt.text} className="max-h-12 max-w-full" />
+                ) : (
+                  <span
+                    className={`min-w-0 flex-1 text-sm text-slate-800 ${
+                      opt.isCode ? "whitespace-pre-wrap break-all font-mono" : "break-words"
+                    }`}
+                  >
+                    {opt.text}
+                  </span>
+                )}
                 {revealed && opt.correct && (
                   <span className="ml-auto text-green-600">✓</span>
                 )}

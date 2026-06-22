@@ -6486,25 +6486,25 @@
       },
       {
         "label": "C",
-        "text": "k, k₁n + k₂, k₂n² + k₃n + k₄",
+        "text": "k, k1n + k2, k2n2 + k3n + k4",
         "isCode": false,
         "correct": false
       },
       {
         "label": "D",
-        "text": "k₁n + k₂, k₃n + k₄, k₅n² + k₆n + k₇",
+        "text": "k1n + k2, k3n + k4, k5n2 + k6n + k7",
         "isCode": false,
         "correct": false
       },
       {
         "label": "E",
-        "text": "k, k₁n² + k₂n + k₃, k₄n² + k₅n + k₆",
+        "text": "k, k1n2 + k2n + k3, k4n2 + k5n + k6",
         "isCode": false,
         "correct": false
       },
       {
         "label": "F",
-        "text": "k₁n + k₂, k₃n² + k₄n + k₅, k₆n² + k₇n + k₈",
+        "text": "k1n + k2, k3n2 + k4n + k5, k6n2 + k7n + k8",
         "isCode": false,
         "correct": true
       }
@@ -6526,21 +6526,24 @@
     "options": [
       {
         "label": "A",
-        "text": "limn→∞ TT¹₂((nn)) = 0",
+        "text": "limn→∞ TT12((nn)) = 0",
         "isCode": false,
-        "correct": false
+        "correct": false,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-2-optA.png"
       },
       {
         "label": "B",
-        "text": "limn→∞ TT¹₂((nn)) = ∞",
+        "text": "limn→∞ TT12((nn)) = ∞",
         "isCode": false,
-        "correct": false
+        "correct": false,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-2-optB.png"
       },
       {
         "label": "C",
-        "text": "limn→∞ TT¹₂((nn)) = k",
+        "text": "limn→∞ TT12((nn)) = k",
         "isCode": false,
-        "correct": true
+        "correct": true,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-2-optC.png"
       }
     ],
     "correctCount": 1
@@ -6552,11 +6555,11 @@
     "number": 3,
     "content": [
       {
-        "type": "text",
-        "value": "Pentru limn→∞ᶠg(⁽ₙⁿ₎⁾ = ∞, care din următoarele afirmaţii sunt adevărate?"
+        "type": "image",
+        "value": "/figures/m1-metode-de-analiza-a-algoritmilor-3-enunt.png"
       }
     ],
-    "text": "Pentru limn→∞ᶠg(⁽ₙⁿ₎⁾ = ∞, care din următoarele afirmaţii sunt adevărate?",
+    "text": "",
     "options": [
       {
         "label": "A",
@@ -6664,19 +6667,22 @@
         "label": "A",
         "text": "fg((nn)) ∈ Ω(n)",
         "isCode": false,
-        "correct": false
+        "correct": false,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-6-optA.png"
       },
       {
         "label": "B",
         "text": "fg((nn)) ∈ O(n)",
         "isCode": false,
-        "correct": true
+        "correct": true,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-6-optB.png"
       },
       {
         "label": "C",
         "text": "fg((nn)) ∈ Θ(n)",
         "isCode": false,
-        "correct": false
+        "correct": false,
+        "image": "/figures/m1-metode-de-analiza-a-algoritmilor-6-optC.png"
       }
     ],
     "correctCount": 1
@@ -6990,7 +6996,7 @@
       },
       {
         "label": "B",
-        "text": "f(n) ∈ O(2log n)",
+        "text": "f(n) ∈ O(2^(log n))",
         "isCode": false,
         "correct": true
       },
@@ -7611,10 +7617,10 @@
     "content": [
       {
         "type": "text",
-        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x² + x + 1. Dacă s-a recepţionat mesajul T = 2332₈ (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial."
+        "value": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x2 + x + 1. Dacă s-a recepţionat mesajul T = 23328 (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial."
       }
     ],
-    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x² + x + 1. Dacă s-a recepţionat mesajul T = 2332₈ (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial.",
+    "text": "Fie o transmisie care utilizează metoda codurilor polinomiale (CRC) prin intermediul polinomului generator G(x) = x2 + x + 1. Dacă s-a recepţionat mesajul T = 23328 (11 biţi) să se stabilească dacă a fost trimis corect, iar dacă răspunsul este afirmativ să se afle mesajul M iniţial.",
     "options": [
       {
         "label": "A",

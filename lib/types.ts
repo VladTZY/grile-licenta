@@ -3,6 +3,8 @@ export interface Option {
   text: string;
   isCode: boolean;
   correct: boolean;
+  /** Set when the option is 2-D math (a limit/fraction) rendered as an image. */
+  image?: string;
 }
 
 export interface Block {

@@ -159,13 +159,18 @@ export default function BrowsePage() {
                         className="mt-1 h-4 w-4 flex-none rounded border-slate-300"
                       />
                       <span className="flex-none font-semibold">{o.label}.</span>
-                      <span
-                        className={`min-w-0 flex-1 ${
-                          o.isCode ? "whitespace-pre-wrap break-all font-mono" : "break-words"
-                        }`}
-                      >
-                        {o.text}
-                      </span>
+                      {o.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={o.image} alt={o.text} className="max-h-12 max-w-full" />
+                      ) : (
+                        <span
+                          className={`min-w-0 flex-1 ${
+                            o.isCode ? "whitespace-pre-wrap break-all font-mono" : "break-words"
+                          }`}
+                        >
+                          {o.text}
+                        </span>
+                      )}
                     </label>
                   </li>
                 ))}
