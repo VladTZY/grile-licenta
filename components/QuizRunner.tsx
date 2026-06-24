@@ -18,10 +18,17 @@ interface Props {
 
 const LABELS = "ABCDEFGHIJKLMN";
 
-/** Deterministic per-question shuffle so option order is stable across renders
- *  and refreshes (no jumping around, resume-safe). */
-function shuffleOptions(q: Question): Question {
-  let seed = 0;
+/** Generate a fresh 32-bit seed. Call only on the client (inside effects or
+ *  handlers) to avoid SSR/hydration mismatches. */
+function newSeed(): number {
+  return (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) | 0;
+}
+
+/** Shuffle a question's options deterministically given a per-run seed mixed
+ *  with the question id. Stable within a run (same runSeed + q.id -> same
+ *  order), but varies between runs when runSeed changes. */
+function shuffleOptions(q: Question, runSeed: number): Question {
+  let seed = runSeed | 0;
   for (let i = 0; i < q.id.length; i++) seed = (seed * 31 + q.id.charCodeAt(i)) | 0;
   const rand = () => {
     seed = (seed + 0x6d2b79f5) | 0;
@@ -67,6 +74,10 @@ export default function QuizRunner({
 }: Props) {
   const [overrides, setOverrides] = useState<ReturnType<typeof loadOverrides>>({});
   const [mounted, setMounted] = useState(false);
+  // Per-run seed: starts at 0 (placeholder), set to a real random value in the
+  // mount effect and on every new run. Kept at 0 during SSR so the list memo
+  // skips the shuffle until the client has a real seed.
+  const [runSeed, setRunSeed] = useState(0);
 
   // round-based state
   const [round, setRound] = useState(1);
@@ -80,13 +91,14 @@ export default function QuizRunner({
 
   const list = useMemo(() => {
     const applied = applyOverrides(questions, overrides);
-    return hard ? applied.map(shuffleOptions) : applied;
-  }, [questions, overrides, hard]);
+    return hard ? applied.map((q) => shuffleOptions(q, runSeed)) : applied;
+  }, [questions, overrides, hard, runSeed]);
   const byId = useMemo(() => new Map(list.map((q) => [q.id, q])), [list]);
   const fp = fingerprint(questions);
   const progressKey = storageKey ? `grile_progress_${storageKey}` : null;
 
   function startFresh(src: Question[] = questions) {
+    setRunSeed(newSeed());
     setRound(1);
     setQueueIds(src.map((q) => q.id));
     setPos(0);
@@ -119,7 +131,14 @@ export default function QuizRunner({
         /* ignore */
       }
     }
-    if (!restored) startFresh();
+    if (!restored) {
+      startFresh();
+    } else {
+      // Restored run gets a fresh random seed (new scramble), which is
+      // acceptable because saved progress stores question ids/counters, not
+      // option positions. The order is stable for the duration of this run.
+      setRunSeed(newSeed());
+    }
     setMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
