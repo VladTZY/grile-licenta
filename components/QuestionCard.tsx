@@ -137,6 +137,9 @@ export default function QuestionCard({
             className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
           >
             Verifică
+            <kbd className="ml-2 rounded border border-white/25 px-1 text-[10px] font-normal text-white/60">
+              ↵
+            </kbd>
           </button>
         ) : (
           <>
@@ -147,6 +150,9 @@ export default function QuestionCard({
                 className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
               >
                 {isLast ? "Termină" : "Continuă →"}
+                <kbd className="ml-2 rounded border border-white/25 px-1 text-[10px] font-normal text-white/60">
+                  ↵
+                </kbd>
               </button>
             )}
             <span
