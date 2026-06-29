@@ -68,6 +68,7 @@ export default function ExamPage() {
           questions={deck}
           storageKey="exam"
           singlePass
+          showGrade
           onRestart={start}
         />
       </div>
@@ -80,7 +81,8 @@ export default function ExamPage() {
         <h1 className="text-xl font-bold text-slate-900">Simulare examen</h1>
         <p className="mt-1 text-sm text-slate-600">
           {EXAM_TOTAL} de întrebări la întâmplare, repartizate proporțional pe module.
-          Răspunzi o singură dată la fiecare, apoi primești scorul final.
+          Răspunzi o singură dată la fiecare, apoi primești nota: fiecare grilă
+          corectă valorează 0.25 puncte.
         </p>
       </div>
 

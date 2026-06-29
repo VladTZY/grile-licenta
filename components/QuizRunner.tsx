@@ -16,6 +16,8 @@ interface Props {
   hard?: boolean;
   /** Exam mode: score after a single pass instead of repeating wrong ones. */
   singlePass?: boolean;
+  /** Show a grade on the results screen: 2.0 baseline + 0.2 per correct answer. */
+  showGrade?: boolean;
 }
 
 const LABELS = "ABCDEFGHIJKLMN";
@@ -74,6 +76,7 @@ export default function QuizRunner({
   storageKey,
   hard = false,
   singlePass = false,
+  showGrade = false,
 }: Props) {
   const [overrides, setOverrides] = useState<ReturnType<typeof loadOverrides>>({});
   const [mounted, setMounted] = useState(false);
@@ -180,17 +183,34 @@ export default function QuizRunner({
   if (done) {
     const pct = attempted ? Math.round((correct / attempted) * 100) : 0;
     const perfect = attempted > 0 && correct === attempted;
+    const grade = Math.min(10, correct * 0.25);
     return (
       <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
         <h2 className={`text-xl font-bold ${perfect ? "text-green-600" : "text-slate-900"}`}>
           {perfect ? "Toate corecte! 🎉" : "Gata!"}
         </h2>
-        <p className="mt-2 text-3xl font-bold tabular-nums text-slate-900">
-          {correct}/{attempted}
-        </p>
-        <p className="mt-1 text-sm text-slate-500">
-          {pct}% corecte{round > 1 ? ` · ${round} runde` : ""}
-        </p>
+        {showGrade ? (
+          <>
+            <p className="mt-3 text-5xl font-bold tabular-nums text-slate-900">
+              {grade.toFixed(2)}
+            </p>
+            <p className="mt-2 text-sm text-slate-500">
+              {correct}/{attempted} corecte · {pct}%
+            </p>
+            <p className="mt-1 text-xs text-slate-400">
+              {correct} × 0.25 puncte
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-slate-900">
+              {correct}/{attempted}
+            </p>
+            <p className="mt-1 text-sm text-slate-500">
+              {pct}% corecte{round > 1 ? ` · ${round} runde` : ""}
+            </p>
+          </>
+        )}
         <button
           onClick={() => {
             onRestart?.();
