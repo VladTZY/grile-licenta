@@ -10,3 +10,4 @@ __pycache__
 .vercel
 next-env.d.ts
 tsconfig.tsbuildinfo
+.gstack/

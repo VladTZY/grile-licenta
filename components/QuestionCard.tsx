@@ -95,7 +95,7 @@ export default function QuestionCard({
                 type="button"
                 onClick={() => toggle(opt.label)}
                 disabled={revealed}
-                className={`flex w-full items-start gap-3 rounded-md border px-3 py-2 text-left transition ${cls}`}
+                className={`flex w-full items-start gap-3 rounded-md border px-3 py-2 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 ${cls}`}
               >
                 <span
                   className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded border text-xs font-bold ${
@@ -134,9 +134,12 @@ export default function QuestionCard({
         {!revealed ? (
           <button
             onClick={check}
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
           >
             Verifică
+            <kbd className="ml-2 rounded border border-white/25 px-1 text-[10px] font-normal text-white/60">
+              ↵
+            </kbd>
           </button>
         ) : (
           <>
@@ -144,9 +147,12 @@ export default function QuestionCard({
               <button
                 onClick={onNext}
                 autoFocus
-                className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
               >
                 {isLast ? "Termină" : "Continuă →"}
+                <kbd className="ml-2 rounded border border-white/25 px-1 text-[10px] font-normal text-white/60">
+                  ↵
+                </kbd>
               </button>
             )}
             <span
