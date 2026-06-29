@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Question } from "@/lib/types";
 import QuestionContent from "./QuestionContent";
 
@@ -49,6 +49,19 @@ export default function QuestionCard({
   const isCorrectOverall =
     selected.size === correctLabels.size &&
     [...selected].every((l) => correctLabels.has(l));
+
+  // Enter submits the answer; once revealed, Enter advances to the next question.
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Enter" || e.repeat) return;
+      e.preventDefault();
+      if (!revealed) check();
+      else onNext?.();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealed, selected, onNext]);
 
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
