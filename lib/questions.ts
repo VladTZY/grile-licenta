@@ -30,3 +30,76 @@ export const MODULES = TREE.map((m) => m.module);
 export function getQuestion(id: string): Question | undefined {
   return QUESTIONS.find((q) => q.id === id);
 }
+
+/** Default size of an exam simulation. */
+export const EXAM_SIZE = 40;
+
+/**
+ * Allocate `total` exam slots across modules proportionally to each module's
+ * question count, using the largest-remainder (Hare quota) method so the parts
+ * sum to exactly `total` (capped by how many questions each module actually
+ * has). Bigger module → more questions. Deterministic, safe to call in SSR.
+ */
+export function allocateExam(
+  total = EXAM_SIZE,
+  tree: ModuleNode[] = TREE
+): { module: string; count: number }[] {
+  const sum = tree.reduce((a, m) => a + m.count, 0);
+  if (sum === 0) return [];
+  total = Math.min(total, sum);
+
+  const parts = tree.map((m) => {
+    const exact = (m.count / sum) * total;
+    return { module: m.module, cap: m.count, exact, count: Math.min(Math.floor(exact), m.count) };
+  });
+
+  let used = parts.reduce((a, p) => a + p.count, 0);
+  // Hand out the leftover slots one at a time to the largest fractional
+  // remainders first, cycling through modules (and skipping any at capacity) so
+  // each gets at most one extra per pass.
+  const byRemainder = [...parts].sort(
+    (a, b) => b.exact - Math.floor(b.exact) - (a.exact - Math.floor(a.exact))
+  );
+  for (let i = 0; used < total && i < byRemainder.length * total; i++) {
+    const p = byRemainder[i % byRemainder.length];
+    if (p.count < p.cap) {
+      p.count++;
+      used++;
+    }
+  }
+
+  return parts.map((p) => ({ module: p.module, count: p.count }));
+}
+
+function shuffleArr<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/**
+ * Build an exam deck: a proportional, random sample of `total` questions across
+ * modules. Uses Math.random — call on the client (effects/handlers) only, to
+ * avoid SSR/hydration mismatches.
+ */
+export function buildExamDeck(
+  total = EXAM_SIZE,
+  questions: Question[] = QUESTIONS,
+  tree: ModuleNode[] = TREE
+): Question[] {
+  const alloc = allocateExam(total, tree);
+  const byModule = new Map<string, Question[]>();
+  for (const q of questions) {
+    const list = byModule.get(q.module);
+    if (list) list.push(q);
+    else byModule.set(q.module, [q]);
+  }
+  const deck: Question[] = [];
+  for (const { module, count } of alloc) {
+    deck.push(...shuffleArr(byModule.get(module) ?? []).slice(0, count));
+  }
+  return shuffleArr(deck);
+}

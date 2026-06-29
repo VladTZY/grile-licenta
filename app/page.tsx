@@ -11,7 +11,7 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <ModeCard
           href="/practice"
           title="Pe rând"
@@ -21,6 +21,11 @@ export default function Home() {
           href="/random"
           title="Aleatoriu"
           desc="Întrebări în ordine aleatorie, filtrate pe module și capitole."
+        />
+        <ModeCard
+          href="/exam"
+          title="Simulare examen"
+          desc="40 de întrebări proporțional pe module, cu scor final."
         />
         <ModeCard
           href="/browse"

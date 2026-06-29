@@ -14,6 +14,8 @@ interface Props {
   storageKey?: string;
   /** Hard mode: also shuffle (and relabel) the answer options. */
   hard?: boolean;
+  /** Exam mode: score after a single pass instead of repeating wrong ones. */
+  singlePass?: boolean;
 }
 
 const LABELS = "ABCDEFGHIJKLMN";
@@ -71,6 +73,7 @@ export default function QuizRunner({
   emptyMessage,
   storageKey,
   hard = false,
+  singlePass = false,
 }: Props) {
   const [overrides, setOverrides] = useState<ReturnType<typeof loadOverrides>>({});
   const [mounted, setMounted] = useState(false);
@@ -176,14 +179,17 @@ export default function QuizRunner({
 
   if (done) {
     const pct = attempted ? Math.round((correct / attempted) * 100) : 0;
+    const perfect = attempted > 0 && correct === attempted;
     return (
       <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
-        <h2 className="text-xl font-bold text-green-600">Toate corecte! 🎉</h2>
-        <p className="mt-2 text-slate-700">
-          Ai răspuns corect la toate cele {questions.length} întrebări.
+        <h2 className={`text-xl font-bold ${perfect ? "text-green-600" : "text-slate-900"}`}>
+          {perfect ? "Toate corecte! 🎉" : "Gata!"}
+        </h2>
+        <p className="mt-2 text-3xl font-bold tabular-nums text-slate-900">
+          {correct}/{attempted}
         </p>
         <p className="mt-1 text-sm text-slate-500">
-          {round} {round === 1 ? "rundă" : "runde"} · {correct}/{attempted} răspunsuri corecte ({pct}%)
+          {pct}% corecte{round > 1 ? ` · ${round} runde` : ""}
         </p>
         <button
           onClick={() => {
@@ -267,8 +273,8 @@ export default function QuizRunner({
         onNext={() => {
           if (!isLastInRound) {
             setPos((p) => p + 1);
-          } else if (wrongIds.length === 0) {
-            setDone(true); // every question answered correctly
+          } else if (singlePass || wrongIds.length === 0) {
+            setDone(true); // exam: score after one pass; practice: all correct
           } else {
             setShowRoundEnd(true); // repeat the wrong ones next round
           }

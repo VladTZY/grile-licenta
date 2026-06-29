@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/", label: "Acasă" },
   { href: "/practice", label: "Pe rând" },
   { href: "/random", label: "Aleatoriu" },
+  { href: "/exam", label: "Simulare examen" },
   { href: "/browse", label: "Toate grilele" },
 ];
 
